@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import {withRouter} from 'react-router-dom'
 import contractService from '../services/contract-service'
 import Pagination from 'react-js-pagination'
 
@@ -11,12 +12,23 @@ class ListingsGrid extends Component {
     this.state = {
       listingIds: [],
       listingsPerPage: 12,
-      activePage: this.props.pageId || 1
+      // TODO: this is happening too late for the pagination component
+      // to set the correct class names
+      activePage: this.getPageId()
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    const hasPageStateChanged = prevProps.location.pathname && (this.props.location.pathname !== prevProps.location.pathname)
+
+    if (hasPageStateChanged) {
+      this.setState({ activePage: this.getPageId() })
     }
   }
 
   componentWillMount() {
     this.handlePageChange = this.handlePageChange.bind(this)
+    this.getPageId = this.getPageId.bind(this)
     this.getPageUrl = this.getPageUrl.bind(this)
 
     // Get listings to hide
@@ -54,13 +66,19 @@ class ListingsGrid extends Component {
     })
   }
 
+  getPageId() {
+    // Default to first page for index
+    return this.props.pageId || 1
+  }
+
   handlePageChange(pageNumber) {
     console.log(`active page is ${pageNumber}`)
-    this.setState({activePage: pageNumber})
+    this.setState({ activePage: pageNumber })
+    this.props.history.push(`/page/${pageNumber}`)
   }
 
   getPageUrl(pageNumber) {
-    return `page/${pageNumber}`
+    return `/page/${pageNumber}`
   }
 
   render() {
@@ -93,4 +111,4 @@ class ListingsGrid extends Component {
   }
 }
 
-export default ListingsGrid
+export default withRouter(ListingsGrid)
