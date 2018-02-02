@@ -11,12 +11,13 @@ class ListingsGrid extends Component {
     this.state = {
       listingIds: [],
       listingsPerPage: 12,
-      activePage: 1
+      activePage: this.props.pageId || 1
     }
   }
 
   componentWillMount() {
     this.handlePageChange = this.handlePageChange.bind(this)
+    this.getPageUrl = this.getPageUrl.bind(this)
 
     // Get listings to hide
     const hideListPromise = new Promise((resolve, reject) => {
@@ -58,6 +59,10 @@ class ListingsGrid extends Component {
     this.setState({activePage: pageNumber})
   }
 
+  getPageUrl(pageNumber) {
+    return `page/${pageNumber}`
+  }
+
   render() {
 
     // Calc listings to show for given page
@@ -78,6 +83,7 @@ class ListingsGrid extends Component {
           totalItemsCount={this.state.listingIds.length}
           pageRangeDisplayed={5}
           onChange={this.handlePageChange}
+          getPageUrl={this.getPageUrl}
           itemClass="page-item"
           linkClass="page-link"
           hideDisabled="true"

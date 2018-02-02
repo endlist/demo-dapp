@@ -21,12 +21,12 @@ import '../css/poppins.css'
 import '../css/app.css'
 
 
-const HomePage = () => {
+const HomePage = (props) => {
   return (
     <main>
       <NavBar />
       <div className="container">
-        <Listings />
+        <Listings pageId={props.match.params.pageId} />
       </div>
       <Footer />
     </main>
@@ -91,6 +91,7 @@ const App = () => (
       >
         <div>
           <Route exact path="/" component={HomePage}/>
+          <Route path="/page/:pageId" component={HomePage}/>
           <Route path="/listing/:listingId" component={ListingDetailPage}/>
           <Route path="/create" component={CreateListingPage}/>
         </div>
